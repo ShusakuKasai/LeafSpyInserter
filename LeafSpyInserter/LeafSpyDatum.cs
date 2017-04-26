@@ -8,7 +8,7 @@ namespace LeafSpyInserter
 {
     class LeafSpyDatum
     {
-        public int tripId;
+        public int experimentId;
         public int driverId;
         public int carId;
         public DateTime dateTime;
@@ -60,9 +60,9 @@ namespace LeafSpyInserter
         public int chargeMode;
         public int obcOutPwr;
 
-        public void setTripId(int tripId)
+        public void setExperimentId(int experimentId)
         {
-            this.tripId = tripId;
+            this.experimentId = experimentId;
         }
 
         public void setDriverId(int driverId)

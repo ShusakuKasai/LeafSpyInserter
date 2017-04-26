@@ -150,10 +150,10 @@ namespace LeafSpyInserter
                 sqlConnection.Open();
 
                 /***** TRIPS_TABLE生成 Start *****/
-                string query = "SELECT TRIP_ID, START_TIME, END_TIME FROM [ECOLOGDBver2].[dbo].[TRIPS] WHERE DRIVER_ID = " + driverID + " AND CAR_ID = " + carID + "AND SENSOR_ID = " + sensorID;
-                SqlCommand command = new SqlCommand(query, sqlConnection);
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                dataAdapter.Fill(TRIPS_TABLE);
+                //string query = "SELECT TRIP_ID, START_TIME, END_TIME FROM [ECOLOGDBver2].[dbo].[TRIPS] WHERE DRIVER_ID = " + driverID + " AND CAR_ID = " + carID + "AND SENSOR_ID = " + sensorID;//
+                //SqlCommand command = new SqlCommand(query, sqlConnection);
+                //SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                //dataAdapter.Fill(TRIPS_TABLE);
                 /***** TRIPS_TABLE生成 End *****/
 
                 // データ挿入
@@ -179,55 +179,55 @@ namespace LeafSpyInserter
                         datum.setDriverId(driverID);
                         datum.setCarId(carID);
 
-                        /**** トリップ判別 Start ****/
-                        int tripID = 0;
-                        for (int k = 0; k < TRIPS_TABLE.Rows.Count; k++)
-                        {
-                            // +- 5minute
-                            DateTime startTime = (DateTime)TRIPS_TABLE.Rows[k][1];
-                            DateTime startEdge = startTime.AddMinutes(-5);
-                            DateTime endTime = (DateTime) TRIPS_TABLE.Rows[k][2];
-                            DateTime endEdge = endTime.AddMinutes(5);
+                        ///**** トリップ判別 Start ****/
+                        //int tripID = 0;
+                        //for (int k = 0; k < TRIPS_TABLE.Rows.Count; k++)
+                        //{
+                        //    // +- 5minute
+                        //    DateTime startTime = (DateTime)TRIPS_TABLE.Rows[k][1];
+                        //    DateTime startEdge = startTime.AddMinutes(-5);
+                        //    DateTime endTime = (DateTime) TRIPS_TABLE.Rows[k][2];
+                        //    DateTime endEdge = endTime.AddMinutes(5);
 
-                            if (startEdge < datum.dateTime && datum.dateTime < endEdge)
-                            {
-                                tripID = (int)TRIPS_TABLE.Rows[k][0];
-                                datum.setTripId((int)TRIPS_TABLE.Rows[k][0]);
+                        //    if (startEdge < datum.dateTime && datum.dateTime < endEdge)
+                        //    {
+                        //        tripID = (int)TRIPS_TABLE.Rows[k][0];
+                        //        datum.setTripId((int)TRIPS_TABLE.Rows[k][0]);
 
-                                // データベースに挿入
-                                // トランザクション生成
-                                SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
-                                SqlCommand sqlCommand = sqlConnection.CreateCommand();
-                                sqlCommand.Transaction = sqlTransaction;
+                        //        // データベースに挿入
+                        //        // トランザクション生成
+                        //        SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
+                        //        SqlCommand sqlCommand = sqlConnection.CreateCommand();
+                        //        sqlCommand.Transaction = sqlTransaction;
 
-                                try
-                                {
-                                    // 新規にInsert文を発行
-                                    String sqlIns = getInsertString(datum, false);
-                                    sqlCommand.CommandText = sqlIns;
-                                    // 指定した SQL コマンドを実行してデータを挿入する
-                                    sqlCommand.ExecuteNonQuery();
-                                    // 旨くいったらコミット
-                                    sqlTransaction.Commit();
+                        //        try
+                        //        {
+                        //            // 新規にInsert文を発行
+                        //            String sqlIns = getInsertString(datum, false);
+                        //            sqlCommand.CommandText = sqlIns;
+                        //            // 指定した SQL コマンドを実行してデータを挿入する
+                        //            sqlCommand.ExecuteNonQuery();
+                        //            // 旨くいったらコミット
+                        //            sqlTransaction.Commit();
 
-                                    this.successInsertingTextBox.AppendText("Success : " + tripID + " , " + datum.dateTime + System.Environment.NewLine);
-                                }
-                                catch (Exception e)
-                                {
-                                    tripID = -1;
-                                    Console.WriteLine(e.Message);
-                                    this.failedInsertingTextBox.AppendText("Failed : " + datum.dateTime + System.Environment.NewLine);
-                                    // 失敗すると例外となるので，ロールバック
-                                    sqlTransaction.Rollback();
-                                }
-                            }
+                        //            this.successInsertingTextBox.AppendText("Success : " + tripID + " , " + datum.dateTime + System.Environment.NewLine);
+                        //        }
+                        //        catch (Exception e)
+                        //        {
+                        //            tripID = -1;
+                        //            Console.WriteLine(e.Message);
+                        //            this.failedInsertingTextBox.AppendText("Failed : " + datum.dateTime + System.Environment.NewLine);
+                        //            // 失敗すると例外となるので，ロールバック
+                        //            sqlTransaction.Rollback();
+                        //        }
+                        //    }
        
-                        }
+                        //}
                         /**** トリップ判別 End ****/
 
                         // NULL許容ならばTrip ID NULLでインサート
-                        if (tripID == 0 && nullAllowance == true)
-                        {
+                        //if (tripID == 0 && nullAllowance == true)
+                        //{
                             // データベースに挿入
                             // トランザクション生成
                             SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
@@ -255,7 +255,7 @@ namespace LeafSpyInserter
                             }
                         }
 
-                    }
+                    //}
                 }
                 finally
                 {
@@ -279,7 +279,7 @@ namespace LeafSpyInserter
         {
             if (nullAllowance == false)
             {
-                String insertQuery = "INSERT INTO LEAFSPY_RAW VALUES('" + datum.tripId + "','" + datum.driverId + "','" + datum.carId + "','" + datum.dateTime + "'," + "NULL"
+                String insertQuery = "INSERT INTO LEAFSPY_RAW VALUES('" + datum.experimentId + "','" + datum.driverId + "','" + datum.carId + "','" + datum.dateTime + "'," + "NULL"
                                         + "," + "NULL" + ",'" + datum.elv + "','" + datum.speed + "','" + datum.gids + "','" + datum.soc + "','" + datum.ahr
                                      + "','" + datum.packVolts + "','" + datum.packAmps + "','" + datum.maxCpMv + "','" + datum.minCpMv + "','" + datum.avgCpMv + "','" + datum.cpMvDiff + "','" + datum.judgementValue
                                      + "','" + datum.packT1F + "','" + datum.packT1C + "','" + datum.packT2F + "','" + datum.packT2C + "','" + datum.packT3F + "','" + datum.packT3C + "','" + datum.packT4F + "','" + datum.packT4C
