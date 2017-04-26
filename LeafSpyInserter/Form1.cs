@@ -143,7 +143,7 @@ namespace LeafSpyInserter
 
             /***** DBにアクセス *****/
 
-            String connectionString = "Data Source=ECOLOGDB;Initial Catalog=ECOLOGDBver2;Integrated Security=True;Connection Timeout=60";
+            String connectionString = "Data Source=ECOLOGDB2016;Initial Catalog=ECOLOGDBver3;Integrated Security=True;Connection Timeout=60";
 
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
